@@ -108,7 +108,7 @@ Build a trustworthy financial cockpit that lets users:
 ## Internationalization (i18n) 🌍
 
 - Default UI language: English.
-- Frontend ships with a simple extensible locale registry (`en`, `fr`, `es`, `de`, `it`, `pt`, `zh`, `ja`, `hi`, `ar`, `ru`).
+- Frontend ships with a simple extensible locale registry (`en`, `fr`, `es`, `de`, `it`, `pt`, `zh`, `ja`, `hi`, `ar`, `ru`, `ka`).
 - Locale can be user-configured and persisted.
 
 ## Currencies & Timezone
@@ -139,6 +139,73 @@ Default timezone:
 - `frontend/` Astro + Vue + Pinia + Charting + i18n
 - `docs/` architecture, GDPR, ADRs
 - `.github/workflows/` CI workflows
+
+## Run Locally
+
+### Prerequisites
+- Docker + Docker Compose
+- Java 25
+- Node.js 22+
+- npm
+
+### Option A - Step-by-step (recommended for development)
+
+1. Start PostgreSQL
+```bash
+docker compose up -d postgres
+```
+
+2. Start Keycloak (admin/admin)
+```bash
+docker run --name gandzi-keycloak --rm -p 8081:8080 \
+  -e KEYCLOAK_ADMIN=admin \
+  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak:latest start-dev
+```
+
+3. Configure Keycloak (in browser)
+- Open `http://localhost:8081`
+- Login with `admin` / `admin`
+- Create realm: `gandzi`
+- Create client:
+  - Client ID: `gandzi-frontend`
+  - Type: OpenID Connect
+  - Access type: Public
+  - Valid redirect URIs: `http://localhost:4321/*`
+  - Web origins: `http://localhost:4321`
+- Create one user in realm `gandzi`:
+  - `Users` -> `Add user`
+  - Set credentials (password), non-temporary for convenience
+
+4. Start backend
+```bash
+cd backend
+GRADLE_USER_HOME=/tmp/.gradle-gandzi ./gradlew bootRun
+```
+
+5. Start frontend
+```bash
+cd frontend
+npm install
+npm run dev -- --host 0.0.0.0 --port 4321
+```
+
+6. Open in browser
+- Frontend: `http://localhost:4321`
+- Backend health: `http://localhost:8080/actuator/health`
+- Keycloak admin: `http://localhost:8081`
+
+### Option B - Docker Compose alternative
+
+Run stack containers from project root:
+```bash
+docker compose up --build
+```
+
+Notes:
+- Current compose includes `postgres`, `backend`, and `frontend`.
+- You still need a Keycloak instance and realm/client/user setup for OAuth2 login.
+- You can keep using the Keycloak command from Option A in parallel.
 
 ## License
 
