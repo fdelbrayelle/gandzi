@@ -114,6 +114,9 @@ body {
 
 .login-btn {
   width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   color: #05060f;
   font-weight: 700;
@@ -124,6 +127,7 @@ body {
   background: linear-gradient(115deg, var(--brand-cyan), var(--brand-magenta));
   cursor: pointer;
   transition: transform 150ms ease, filter 150ms ease;
+  text-decoration: none;
 }
 
 .login-btn:hover {
@@ -131,9 +135,144 @@ body {
   filter: brightness(1.05);
 }
 
-.login-hint {
+.dashboard-wrap {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.dashboard-sidebar {
+  padding: 1rem;
+}
+
+.sidebar-brand {
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-family: "Orbitron", "Space Grotesk", sans-serif;
+  letter-spacing: 0.06em;
+  font-size: 1.15rem;
+}
+
+.sidebar-subtitle {
+  margin: 0.35rem 0 0;
   color: var(--text-2);
-  font-size: 0.87rem;
+  font-size: 0.9rem;
+}
+
+.sidebar-menu {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.menu-item {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-1);
+  text-align: left;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  border-color: var(--line-soft);
+}
+
+.menu-item.active {
+  background: rgba(124, 247, 255, 0.1);
+  color: var(--brand-cyan);
+  border-color: var(--line-strong);
+}
+
+.dashboard-main {
+  padding: 1.25rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.dashboard-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.dashboard-subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-2);
+}
+
+.dashboard-section {
+  margin-top: 1.25rem;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.section-subtitle {
+  margin: 0.4rem 0 1rem;
+  color: var(--text-2);
+}
+
+.budget-table-wrap {
+  overflow-x: auto;
+}
+
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+}
+
+.budget-table th,
+.budget-table td {
+  border-bottom: 1px solid var(--line-soft);
+  padding: 0.65rem 0.5rem;
+  text-align: left;
+}
+
+.budget-table thead th {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+.budget-table tfoot th {
+  border-top: 1px solid var(--line-strong);
+}
+
+.positive {
+  color: #72f7c7;
+}
+
+.negative {
+  color: #ff8fa5;
+}
+
+.logout-btn {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text-0);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
 }
 
 @media (max-width: 900px) {
@@ -144,5 +283,9 @@ body {
   .brand-panel,
   .login-panel {
     padding: 1.25rem;
+  }
+
+  .dashboard-wrap {
+    grid-template-columns: 1fr;
   }
 }

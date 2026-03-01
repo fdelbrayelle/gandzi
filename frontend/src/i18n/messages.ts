@@ -8,7 +8,6 @@ const base: MessageMap = {
   signInTitle: 'Sign in to Gandzi',
   signInSubtitle: 'Use your secure OAuth2 account to access your financial treasure.',
   signInCta: 'Continue to secure sign-in',
-  signInHint: 'Authentication provider setup is required (Keycloak realm: gandzi).',
 };
 
 export const messages: Record<Locale, MessageMap> = {
@@ -20,7 +19,6 @@ export const messages: Record<Locale, MessageMap> = {
     signInTitle: 'Se connecter a Gandzi',
     signInSubtitle: 'Utilisez votre compte OAuth2 securise pour acceder a votre tresor financier.',
     signInCta: 'Continuer vers la connexion securisee',
-    signInHint: 'La configuration du fournisseur d authentification est requise (Keycloak realm: gandzi).',
   },
   es: { ...base },
   de: { ...base },
