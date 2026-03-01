@@ -48,6 +48,20 @@ body {
   padding: 2rem 1.25rem;
 }
 
+.auth-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.auth-loading-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--brand-cyan), var(--brand-magenta));
+  box-shadow: var(--shadow-neon);
+}
+
 .hero {
   width: min(1050px, 100%);
   display: grid;

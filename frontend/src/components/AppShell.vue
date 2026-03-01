@@ -17,6 +17,7 @@ const loginUrl = loginBaseUrl.includes('prompt=')
   : `${loginBaseUrl}&prompt=login`;
 const authStorageKey = 'gandzi_auth';
 const isAuthenticated = ref(false);
+const authResolved = ref(false);
 const currentSection = ref('budget');
 
 const sections = [
@@ -33,10 +34,12 @@ onMounted(() => {
     isAuthenticated.value = true;
     window.localStorage.setItem(authStorageKey, 'true');
     window.history.replaceState({}, document.title, window.location.pathname);
+    authResolved.value = true;
     return;
   }
 
   isAuthenticated.value = window.localStorage.getItem(authStorageKey) === 'true';
+  authResolved.value = true;
 });
 
 function logout() {
@@ -48,7 +51,11 @@ function logout() {
 </script>
 
 <template>
-  <div v-if="!isAuthenticated" class="page-wrap">
+  <div v-if="!authResolved" class="auth-loading">
+    <div class="auth-loading-dot" />
+  </div>
+
+  <div v-else-if="!isAuthenticated" class="page-wrap">
     <section class="hero">
       <article class="panel brand-panel">
         <GandziLogo />
