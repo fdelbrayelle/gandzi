@@ -11,6 +11,10 @@
           <stop offset="0%" stop-color="#141a3a" />
           <stop offset="100%" stop-color="#22295f" />
         </linearGradient>
+        <linearGradient id="handsStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#7cf7ff" />
+          <stop offset="100%" stop-color="#ff4fd8" />
+        </linearGradient>
         <filter id="glow" x="-25%" y="-50%" width="150%" height="200%">
           <feGaussianBlur stdDeviation="3.2" result="blur" />
           <feMerge>
@@ -31,7 +35,26 @@
       <path d="M58 160h120" stroke="#8c7bff" stroke-opacity="0.7" stroke-width="2.2" />
       <path d="M48 176h140" stroke="#ff4fd8" stroke-opacity="0.75" stroke-width="2.2" />
       <circle cx="118" cy="86" r="12" fill="#ff9a4f" stroke="#ffe4c8" stroke-width="2" />
-      <path d="M106 214h24" stroke="#ffe7f8" stroke-opacity="0.55" stroke-width="2" />
+
+      <path
+        d="M44 212 C54 198, 76 194, 92 204 C104 212, 112 224, 116 236"
+        fill="none"
+        stroke="url(#handsStroke)"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)"
+      />
+      <path
+        d="M192 212 C182 198, 160 194, 144 204 C132 212, 124 224, 120 236"
+        fill="none"
+        stroke="url(#handsStroke)"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)"
+      />
+      <path d="M92 204 C96 196, 102 194, 108 198" fill="none" stroke="#7cf7ff" stroke-opacity="0.85" stroke-width="2.1" stroke-linecap="round" />
+      <path d="M144 204 C140 196, 134 194, 128 198" fill="none" stroke="#ff4fd8" stroke-opacity="0.85" stroke-width="2.1" stroke-linecap="round" />
+      <path d="M114 220 C116 214, 120 212, 124 216" fill="none" stroke="#ff9a4f" stroke-opacity="0.9" stroke-width="2" stroke-linecap="round" />
 
       <text x="220" y="146" fill="url(#synthStroke)" font-size="108" font-weight="800" letter-spacing="2" style="font-family: 'Orbitron', 'Audiowide', sans-serif;" filter="url(#glow)">
         GANDZI

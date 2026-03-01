@@ -4,6 +4,7 @@ import { createPinia } from 'pinia';
 import { usePreferencesStore } from '../stores/preferences';
 import { messages } from '../i18n/messages';
 import GandziLogo from './branding/GandziLogo.vue';
+import AnnualBudgetMatrix from './AnnualBudgetMatrix.vue';
 
 const pinia = createPinia();
 const store = usePreferencesStore(pinia);
@@ -17,20 +18,6 @@ const loginUrl = loginBaseUrl.includes('prompt=')
 const authStorageKey = 'gandzi_auth';
 const isAuthenticated = ref(false);
 const currentSection = ref('budget');
-const budgetRows = ref([
-  { month: 'January', planned: 3200, actual: 2890, variance: 310 },
-  { month: 'February', planned: 3200, actual: 3340, variance: -140 },
-  { month: 'March', planned: 3200, actual: 3010, variance: 190 },
-  { month: 'April', planned: 3200, actual: 3125, variance: 75 },
-  { month: 'May', planned: 3200, actual: 2980, variance: 220 },
-  { month: 'June', planned: 3200, actual: 2870, variance: 330 },
-  { month: 'July', planned: 3200, actual: 0, variance: 3200 },
-  { month: 'August', planned: 3200, actual: 0, variance: 3200 },
-  { month: 'September', planned: 3200, actual: 0, variance: 3200 },
-  { month: 'October', planned: 3200, actual: 0, variance: 3200 },
-  { month: 'November', planned: 3200, actual: 0, variance: 3200 },
-  { month: 'December', planned: 3200, actual: 0, variance: 3200 },
-]);
 
 const sections = [
   { id: 'budget', label: '📅 Annual Budget' },
@@ -39,12 +26,6 @@ const sections = [
   { id: 'account', label: '⚙️ Account Settings' },
   { id: 'import-export', label: '💾 Import / Export' },
 ];
-
-const totals = computed(() => {
-  const planned = budgetRows.value.reduce((acc, row) => acc + row.planned, 0);
-  const actual = budgetRows.value.reduce((acc, row) => acc + row.actual, 0);
-  return { planned, actual, variance: planned - actual };
-});
 
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
@@ -112,7 +93,6 @@ function logout() {
       <header class="dashboard-header">
         <div>
           <h1 class="dashboard-title">Dashboard</h1>
-          <p class="dashboard-subtitle">Authenticated workspace</p>
         </div>
         <div class="header-actions">
           <button class="logout-btn" type="button" @click="logout">Log out</button>
@@ -121,36 +101,8 @@ function logout() {
 
       <section v-if="currentSection === 'budget'" class="dashboard-section">
         <h2 class="section-title">Annual Budget 2026</h2>
-        <p class="section-subtitle">Month-by-month planner and actuals.</p>
-
-        <div class="budget-table-wrap">
-          <table class="budget-table">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Planned (EUR)</th>
-                <th>Actual (EUR)</th>
-                <th>Variance (EUR)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in budgetRows" :key="row.month">
-                <td>{{ row.month }}</td>
-                <td>{{ row.planned }}</td>
-                <td>{{ row.actual }}</td>
-                <td :class="{ positive: row.variance >= 0, negative: row.variance < 0 }">{{ row.variance }}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>Total</th>
-                <th>{{ totals.planned }}</th>
-                <th>{{ totals.actual }}</th>
-                <th :class="{ positive: totals.variance >= 0, negative: totals.variance < 0 }">{{ totals.variance }}</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+        <p class="section-subtitle">Editable month-by-month matrix with annual and monthly rollups.</p>
+        <AnnualBudgetMatrix />
       </section>
 
       <section v-else class="dashboard-section">

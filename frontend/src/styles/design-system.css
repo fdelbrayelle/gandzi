@@ -51,7 +51,7 @@ body {
 .hero {
   width: min(1050px, 100%);
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
   grid-template-columns: 1.3fr 1fr;
 }
 
@@ -63,12 +63,12 @@ body {
 }
 
 .brand-panel {
-  padding: 2rem;
+  padding: 1.35rem;
   box-shadow: var(--shadow-neon);
 }
 
 .brand-copy {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   color: var(--text-1);
   font-size: 1.02rem;
   line-height: 1.5;
@@ -76,7 +76,7 @@ body {
 }
 
 .meta-chip {
-  margin-top: 1.25rem;
+  margin-top: 0.7rem;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -96,11 +96,11 @@ body {
 }
 
 .login-panel {
-  padding: 1.5rem;
+  padding: 1.15rem;
   display: grid;
-  gap: 1rem;
+  gap: 0.8rem;
   align-content: center;
-  min-height: 420px;
+  min-height: 345px;
 }
 
 .login-title {
