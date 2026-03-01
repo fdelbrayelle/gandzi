@@ -80,8 +80,12 @@ function setCurrentSection(section: DashboardSection) {
           {{ localeMessages.welcome }}
         </p>
         <div class="chip-row">
-          <span class="meta-chip">🔒 GDPR-first</span>
           <span class="meta-chip">📘 Financial Education</span>
+          <span class="meta-chip">🔐 Privacy-by-Design</span>
+          <span class="meta-chip">📅 Annual Budget</span>
+          <span class="meta-chip">💼 Wealth Tracking</span>
+          <span class="meta-chip">🧮 Simulations</span>
+          <span class="meta-chip">💾 Import / Export</span>
         </div>
       </article>
 

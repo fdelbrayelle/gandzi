@@ -1,6 +1,6 @@
 # Gandzi (განძი) - Personal Finance Treasure 🏦💎
 
-`Gandzi` (from Georgian 🇬🇪 `განძი`, "treasure") is a self-hosted personal finance management application focused on rigorous accounting, privacy by design, and long-term wealth intelligence.
+`Gandzi` (from Georgian 🇬🇪 `განძი`, "treasure") is a self-hosted personal finance management application built as privacy-by-default and local-first. The product is intentionally manual-entry first so users keep explicit control over every financial decision and every data point. Think of it as an Excel on steroids for personal finance: domain-driven workflows, stronger guardrails, richer analytics, and simulation engines, while still preserving transparency and user ownership. External market/banking/API connectors are part of the roadmap, but never at the expense of explicit user control.
 
 ## Vision
 
@@ -16,8 +16,9 @@ Build a trustworthy financial cockpit that lets users:
 
 - Hexagonal architecture (domain isolated from frameworks).
 - TDD-first delivery.
-- Privacy by design + GDPR-by-default.
-- Self-hosted first, Docker-ready.
+- Privacy-by-design + privacy-by-default + GDPR-by-default.
+- Local-first and self-hosted first, Docker-ready.
+- Manual entry first by design to keep explicit user control.
 - Public OSS project under Apache-2.0.
 
 ## Product Scope (V1)
