@@ -1,4 +1,4 @@
-<img width="3750" height="2011" alt="Capture d’écran du 2026-03-01 14-28-38" src="https://github.com/user-attachments/assets/8c2ce4ac-60c9-4b1c-b015-40ec4ac20e66" />
+<img width="3751" height="1970" alt="Capture d’écran du 2026-03-01 14-36-44" src="https://github.com/user-attachments/assets/4969b143-68e7-465f-8df9-7dd4bd627d42" />
 
 # Gandzi (განძი) - Personal Finance Treasure 🏦💎
 
