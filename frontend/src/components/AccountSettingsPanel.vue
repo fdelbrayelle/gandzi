@@ -6,7 +6,7 @@ import { messages } from '../i18n/messages';
 const store = usePreferencesStore();
 const localeMessages = computed(() => messages[store.locale]);
 
-const supportedLocales = ['en', 'fr', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'hi', 'ar', 'ru'];
+const supportedLocales = ['en', 'fr', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'hi', 'ar', 'ru', 'ka'];
 const supportedCurrencies = ['EUR', 'USD', 'JPY', 'CNY', 'INR', 'GBP', 'CHF'];
 const supportedTimezones = ['Europe/Paris', 'UTC', 'America/New_York', 'Asia/Tokyo', 'Asia/Shanghai', 'Asia/Kolkata'];
 
