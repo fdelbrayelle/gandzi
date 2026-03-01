@@ -24,13 +24,13 @@ const authResolved = ref(false);
 type DashboardSection = 'budget' | 'wealth' | 'simulations' | 'account' | 'import-export';
 const currentSection = ref<DashboardSection>('budget');
 
-const sections: { id: DashboardSection; label: string }[] = [
-  { id: 'budget', label: '📅 Annual Budget' },
-  { id: 'wealth', label: '💼 Wealth' },
-  { id: 'simulations', label: '🧮 Simulations' },
-  { id: 'account', label: '⚙️ Account Settings' },
-  { id: 'import-export', label: '💾 Import / Export' },
-];
+const sections = computed((): { id: DashboardSection; label: string }[] => [
+  { id: 'budget', label: `📅 ${localeMessages.value.menuBudget}` },
+  { id: 'wealth', label: `💼 ${localeMessages.value.menuWealth}` },
+  { id: 'simulations', label: `🧮 ${localeMessages.value.menuSimulations}` },
+  { id: 'account', label: `⚙️ ${localeMessages.value.menuAccount}` },
+  { id: 'import-export', label: `💾 ${localeMessages.value.menuImportExport}` },
+]);
 
 watch(currentSection, (section) => {
   window.localStorage.setItem(sectionStorageKey, section);
@@ -39,7 +39,7 @@ watch(currentSection, (section) => {
 onMounted(() => {
   store.initFromStorage();
   const savedSection = window.localStorage.getItem(sectionStorageKey);
-  if (savedSection && sections.some((section) => section.id === savedSection)) {
+  if (savedSection && sections.value.some((section) => section.id === savedSection)) {
     currentSection.value = savedSection as DashboardSection;
   }
   const params = new URLSearchParams(window.location.search);
@@ -116,30 +116,28 @@ function setCurrentSection(section: DashboardSection) {
     <main class="dashboard-main panel">
       <header class="dashboard-header">
         <div>
-          <h1 class="dashboard-title">Dashboard</h1>
+          <h1 class="dashboard-title">{{ localeMessages.dashboardTitle }}</h1>
         </div>
         <div class="header-actions">
-          <button class="logout-btn" type="button" @click="logout">Log out</button>
+          <button class="logout-btn" type="button" @click="logout">{{ localeMessages.logoutCta }}</button>
         </div>
       </header>
 
       <section v-if="currentSection === 'budget'" class="dashboard-section">
-        <h2 class="section-title">Annual Budget 2026</h2>
-        <p class="section-subtitle">Editable month-by-month matrix with annual and monthly rollups.</p>
+        <h2 class="section-title">{{ localeMessages.annualBudgetTitle }}</h2>
+        <p class="section-subtitle">{{ localeMessages.annualBudgetSubtitle }}</p>
         <AnnualBudgetMatrix />
       </section>
 
       <section v-else-if="currentSection === 'account'" class="dashboard-section">
-        <h2 class="section-title">Account Settings</h2>
-        <p class="section-subtitle">Manage language, currency, timezone, alerts, and defaults.</p>
+        <h2 class="section-title">{{ localeMessages.accountSettingsTitle }}</h2>
+        <p class="section-subtitle">{{ localeMessages.accountSettingsSubtitle }}</p>
         <AccountSettingsPanel />
       </section>
 
       <section v-else class="dashboard-section">
-        <h2 class="section-title">{{ sections.find((s) => s.id === currentSection)?.label }}</h2>
-        <p class="section-subtitle">
-          This feature area is available from the dashboard menu and will be expanded in the next iteration.
-        </p>
+        <h2 class="section-title">{{ localeMessages.placeholderSectionTitle }}</h2>
+        <p class="section-subtitle">{{ localeMessages.placeholderSectionSubtitle }}</p>
       </section>
     </main>
   </div>

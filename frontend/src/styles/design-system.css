@@ -294,6 +294,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.9rem;
+  position: relative;
 }
 
 .settings-card {
@@ -330,6 +331,19 @@ body {
   border-color: var(--line-strong);
 }
 
+.settings-select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-1) 50%),
+    linear-gradient(135deg, var(--text-1) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) calc(50% - 2px),
+    calc(100% - 11px) calc(50% - 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+
 .settings-toggle {
   display: inline-flex;
   align-items: center;
@@ -350,6 +364,18 @@ body {
   color: #72f7c7;
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.settings-toast {
+  position: absolute;
+  top: -2.4rem;
+  right: 0;
+  border: 1px solid rgba(114, 247, 199, 0.45);
+  background: rgba(8, 18, 17, 0.9);
+  color: #72f7c7;
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem;
   font-size: 0.8rem;
 }
 
