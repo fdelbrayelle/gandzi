@@ -1,8 +1,9 @@
 package com.gandzi.app.application.ledger
 
 import com.gandzi.app.application.ports.EntryRepository
-import com.gandzi.app.domain.ledger.Category
+import com.gandzi.app.domain.ledger.DefaultEntryCategory
 import com.gandzi.app.domain.ledger.Entry
+import com.gandzi.app.domain.ledger.EntryCategory
 import com.gandzi.app.domain.ledger.EntryLine
 import com.gandzi.app.domain.shared.Money
 import kotlin.test.Test
@@ -25,7 +26,7 @@ class ManualEntryServiceTest {
         val entry = Entry(
             id = "e2",
             description = "food",
-            category = Category("groceries", custom = false),
+            category = EntryCategory.Default(DefaultEntryCategory.GROCERIES),
             lines = listOf(
                 EntryLine("expense", Money.of("50.00"), isDebit = true),
                 EntryLine("cash", Money.of("50.00"), isDebit = false),
@@ -38,23 +39,9 @@ class ManualEntryServiceTest {
     }
 
     @Test
-    fun `should reject unknown non-custom category`() {
-        val repo = object : EntryRepository {
-            override fun save(entry: Entry) = Unit
-            override fun delete(id: String) = Unit
+    fun `should reject blank custom category name`() {
+        assertFailsWith<IllegalArgumentException> {
+            EntryCategory.Custom(" ")
         }
-
-        val service = ManualEntryService(repo)
-        val entry = Entry(
-            id = "e3",
-            description = "x",
-            category = Category("unknown", custom = false),
-            lines = listOf(
-                EntryLine("expense", Money.of("5.00"), isDebit = true),
-                EntryLine("cash", Money.of("5.00"), isDebit = false),
-            ),
-        )
-
-        assertFailsWith<IllegalArgumentException> { service.add(entry) }
     }
 }

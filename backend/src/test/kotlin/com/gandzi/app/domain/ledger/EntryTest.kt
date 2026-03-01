@@ -11,7 +11,7 @@ class EntryTest {
             Entry(
                 id = "e1",
                 description = "invalid",
-                category = Category("groceries", custom = false),
+                category = EntryCategory.Default(DefaultEntryCategory.GROCERIES),
                 lines = listOf(
                     EntryLine("cash", Money.of("10.00"), isDebit = true),
                     EntryLine("income", Money.of("9.00"), isDebit = false),

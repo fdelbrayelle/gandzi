@@ -8,27 +8,45 @@ data class EntryLine(
     val isDebit: Boolean,
 )
 
-data class Category(
-    val name: String,
-    val custom: Boolean,
-)
+enum class DefaultEntryCategory {
+    GROCERIES,
+    TRANSPORT,
+    HEALTH,
+    GIFTS,
+    VACATION,
+    HOME_INSURANCE,
+    BORROWER_INSURANCE,
+    VEHICLE_INSURANCE,
+    TAXES,
+    PERSONAL_CARE,
+    CAR_MAINTENANCE,
+    SUBSCRIPTIONS,
+    INVESTMENTS,
+    BANK_FEES,
+    MORTGAGE,
+    RENT,
+    PROPERTY_TAX,
+    ELECTRICITY,
+    GAS,
+    WATER,
+    MISCELLANEOUS,
+    LEISURE,
+}
 
-object DefaultCategories {
-    val values = setOf(
-        "groceries", "transport", "health", "gifts", "vacation",
-        "home_insurance", "borrower_insurance", "vehicle_insurance",
-        "taxes", "personal_care", "car_maintenance",
-        "subscriptions", "investments", "bank_fees", "mortgage",
-        "rent", "property_tax", "electricity", "gas", "water",
-        "miscellaneous", "leisure",
-    )
+sealed interface EntryCategory {
+    data class Default(val value: DefaultEntryCategory) : EntryCategory
+    data class Custom(val name: String) : EntryCategory {
+        init {
+            require(name.isNotBlank()) { "Custom category name cannot be blank" }
+        }
+    }
 }
 
 data class Entry(
     val id: String,
     val lines: List<EntryLine>,
     val description: String,
-    val category: Category,
+    val category: EntryCategory,
 ) {
     init {
         require(lines.size >= 2) { "Double-entry requires at least two lines" }

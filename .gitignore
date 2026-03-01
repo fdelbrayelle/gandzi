@@ -8,6 +8,7 @@
 # Node
 frontend/node_modules/
 frontend/dist/
+frontend/.astro/
 
 # Gradle
 backend/.gradle/
