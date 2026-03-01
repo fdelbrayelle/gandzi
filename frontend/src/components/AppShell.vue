@@ -113,7 +113,6 @@ function logout() {
           <p class="dashboard-subtitle">Authenticated workspace</p>
         </div>
         <div class="header-actions">
-          <span class="meta-chip">🔒 GDPR-first</span>
           <button class="logout-btn" type="button" @click="logout">Log out</button>
         </div>
       </header>
