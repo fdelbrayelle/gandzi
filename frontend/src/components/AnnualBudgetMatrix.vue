@@ -146,6 +146,7 @@ function onValueInput(line: BudgetLine, monthIdx: number, raw: string): void {
   letter-spacing: 0.02em;
   padding: 0.52rem 0.45rem;
   border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
 }
 
 .left-header {

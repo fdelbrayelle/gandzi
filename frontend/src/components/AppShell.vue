@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
 import { usePreferencesStore } from '../stores/preferences';
 import { messages } from '../i18n/messages';
@@ -18,11 +18,13 @@ const loginUrl = loginBaseUrl.includes('prompt=')
   ? loginBaseUrl
   : `${loginBaseUrl}&prompt=login`;
 const authStorageKey = 'gandzi_auth';
+const sectionStorageKey = 'gandzi_dashboard_section';
 const isAuthenticated = ref(false);
 const authResolved = ref(false);
-const currentSection = ref('budget');
+type DashboardSection = 'budget' | 'wealth' | 'simulations' | 'account' | 'import-export';
+const currentSection = ref<DashboardSection>('budget');
 
-const sections = [
+const sections: { id: DashboardSection; label: string }[] = [
   { id: 'budget', label: '📅 Annual Budget' },
   { id: 'wealth', label: '💼 Wealth' },
   { id: 'simulations', label: '🧮 Simulations' },
@@ -30,8 +32,16 @@ const sections = [
   { id: 'import-export', label: '💾 Import / Export' },
 ];
 
+watch(currentSection, (section) => {
+  window.localStorage.setItem(sectionStorageKey, section);
+});
+
 onMounted(() => {
   store.initFromStorage();
+  const savedSection = window.localStorage.getItem(sectionStorageKey);
+  if (savedSection && sections.some((section) => section.id === savedSection)) {
+    currentSection.value = savedSection as DashboardSection;
+  }
   const params = new URLSearchParams(window.location.search);
   if (params.has('code') || params.has('session_state')) {
     isAuthenticated.value = true;
@@ -50,6 +60,10 @@ function logout() {
   isAuthenticated.value = false;
   currentSection.value = 'budget';
   window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+function setCurrentSection(section: DashboardSection) {
+  currentSection.value = section;
 }
 </script>
 
@@ -92,7 +106,7 @@ function logout() {
           class="menu-item"
           :class="{ active: currentSection === item.id }"
           type="button"
-          @click="currentSection = item.id"
+          @click="setCurrentSection(item.id)"
         >
           {{ item.label }}
         </button>
