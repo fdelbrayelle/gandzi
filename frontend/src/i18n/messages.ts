@@ -4,19 +4,31 @@ type MessageMap = Record<string, string>;
 
 const base: MessageMap = {
   appTitle: 'Gandzi - Financial Treasure',
-  welcome: 'Your personal finance cockpit',
+  welcome: 'A precise command center for budgets, wealth, and long-term financial projections.',
+  signInTitle: 'Sign in to Gandzi',
+  signInSubtitle: 'Use your secure OAuth2 account to access your financial treasure.',
+  signInCta: 'Continue to secure sign-in',
+  signInHint: 'Authentication provider setup is required (Keycloak realm: gandzi).',
 };
 
 export const messages: Record<Locale, MessageMap> = {
   en: base,
-  fr: { appTitle: 'Gandzi - Tresor financier', welcome: 'Votre cockpit financier personnel' },
-  es: { appTitle: 'Gandzi - Tesoro financiero', welcome: 'Tu panel financiero personal' },
-  de: { appTitle: 'Gandzi - Finanzschatz', welcome: 'Ihr persoenliches Finanz-Cockpit' },
-  it: { appTitle: 'Gandzi - Tesoro finanziario', welcome: 'La tua cabina finanziaria personale' },
-  pt: { appTitle: 'Gandzi - Tesouro financeiro', welcome: 'Seu cockpit financeiro pessoal' },
-  zh: { appTitle: 'Gandzi - Financial Treasure', welcome: 'Your personal finance cockpit' },
-  ja: { appTitle: 'Gandzi - Financial Treasure', welcome: 'Your personal finance cockpit' },
-  hi: { appTitle: 'Gandzi - Financial Treasure', welcome: 'Your personal finance cockpit' },
-  ar: { appTitle: 'Gandzi - Financial Treasure', welcome: 'Your personal finance cockpit' },
-  ru: { appTitle: 'Gandzi - Financial Treasure', welcome: 'Your personal finance cockpit' },
+  fr: {
+    ...base,
+    appTitle: 'Gandzi - Tresor financier',
+    welcome: 'Un centre de pilotage precis pour budget, patrimoine et projections financieres long terme.',
+    signInTitle: 'Se connecter a Gandzi',
+    signInSubtitle: 'Utilisez votre compte OAuth2 securise pour acceder a votre tresor financier.',
+    signInCta: 'Continuer vers la connexion securisee',
+    signInHint: 'La configuration du fournisseur d authentification est requise (Keycloak realm: gandzi).',
+  },
+  es: { ...base },
+  de: { ...base },
+  it: { ...base },
+  pt: { ...base },
+  zh: { ...base },
+  ja: { ...base },
+  hi: { ...base },
+  ar: { ...base },
+  ru: { ...base },
 };
