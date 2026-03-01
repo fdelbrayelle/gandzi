@@ -10,10 +10,10 @@ const store = usePreferencesStore(pinia);
 const localeMessages = computed(() => messages[store.locale]);
 const defaultLoginUrl =
   'http://localhost:8081/realms/gandzi/protocol/openid-connect/auth?client_id=gandzi-frontend&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A4321%2F';
-const loginUrl = (import.meta.env.PUBLIC_AUTH_LOGIN_URL as string | undefined) ?? defaultLoginUrl;
-const defaultLogoutUrl =
-  'http://localhost:8081/realms/gandzi/protocol/openid-connect/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A4321%2F';
-const logoutUrl = (import.meta.env.PUBLIC_AUTH_LOGOUT_URL as string | undefined) ?? defaultLogoutUrl;
+const loginBaseUrl = (import.meta.env.PUBLIC_AUTH_LOGIN_URL as string | undefined) ?? defaultLoginUrl;
+const loginUrl = loginBaseUrl.includes('prompt=')
+  ? loginBaseUrl
+  : `${loginBaseUrl}&prompt=login`;
 const authStorageKey = 'gandzi_auth';
 const isAuthenticated = ref(false);
 const currentSection = ref('budget');
@@ -60,7 +60,9 @@ onMounted(() => {
 
 function logout() {
   window.localStorage.removeItem(authStorageKey);
-  window.location.href = logoutUrl;
+  isAuthenticated.value = false;
+  currentSection.value = 'budget';
+  window.history.replaceState({}, document.title, window.location.pathname);
 }
 </script>
 

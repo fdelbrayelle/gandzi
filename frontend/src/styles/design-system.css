@@ -99,7 +99,8 @@ body {
   padding: 1.5rem;
   display: grid;
   gap: 1rem;
-  align-content: start;
+  align-content: center;
+  min-height: 420px;
 }
 
 .login-title {
