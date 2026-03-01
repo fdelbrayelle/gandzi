@@ -17,6 +17,9 @@ java {
 
 kotlin {
     jvmToolchain(25)
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget("24"))
+    }
 }
 
 repositories {
@@ -44,6 +47,10 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<org.gradle.api.tasks.compile.JavaCompile> {
+    options.release.set(24)
 }
 
 jooq {
