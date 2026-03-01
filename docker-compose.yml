@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: gandzi
+      POSTGRES_USER: gandzi
+      POSTGRES_PASSWORD: gandzi
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gandzi
+      SPRING_DATASOURCE_USERNAME: gandzi
+      SPRING_DATASOURCE_PASSWORD: gandzi
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/gandzi
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - '4321:4321'
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gandzi
+    username: gandzi
+    password: gandzi
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/gandzi
+
+app:
+  privacy:
+    dataMinimization: true
+  timezoneDefault: Europe/Paris
+  currencies:
+    supported: EUR,USD,JPY,CNY,INR,GBP,CHF
+  budget:
+    defaultAlertThreshold: 0.80
