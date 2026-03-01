@@ -89,6 +89,12 @@ body {
   border-radius: 999px;
 }
 
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
 .login-panel {
   padding: 1.5rem;
   display: grid;

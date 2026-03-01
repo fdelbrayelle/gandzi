@@ -18,7 +18,10 @@ const localeMessages = computed(() => messages[store.locale]);
         <p class="brand-copy">
           {{ localeMessages.welcome }}
         </p>
-        <span class="meta-chip">🔒 GDPR-first • Hexagonal • TDD</span>
+        <div class="chip-row">
+          <span class="meta-chip">🔒 GDPR-first</span>
+          <span class="meta-chip">📘 Financial Education</span>
+        </div>
       </article>
 
       <aside class="panel login-panel">
