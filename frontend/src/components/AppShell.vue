@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { createPinia } from 'pinia';
+import { createPinia, setActivePinia } from 'pinia';
 import { usePreferencesStore } from '../stores/preferences';
 import { messages } from '../i18n/messages';
 import GandziLogo from './branding/GandziLogo.vue';
 import AnnualBudgetMatrix from './AnnualBudgetMatrix.vue';
+import AccountSettingsPanel from './AccountSettingsPanel.vue';
 
 const pinia = createPinia();
+setActivePinia(pinia);
 const store = usePreferencesStore(pinia);
 const localeMessages = computed(() => messages[store.locale]);
 const defaultLoginUrl =
@@ -29,6 +31,7 @@ const sections = [
 ];
 
 onMounted(() => {
+  store.initFromStorage();
   const params = new URLSearchParams(window.location.search);
   if (params.has('code') || params.has('session_state')) {
     isAuthenticated.value = true;
@@ -110,6 +113,12 @@ function logout() {
         <h2 class="section-title">Annual Budget 2026</h2>
         <p class="section-subtitle">Editable month-by-month matrix with annual and monthly rollups.</p>
         <AnnualBudgetMatrix />
+      </section>
+
+      <section v-else-if="currentSection === 'account'" class="dashboard-section">
+        <h2 class="section-title">Account Settings</h2>
+        <p class="section-subtitle">Manage language, currency, timezone, alerts, and defaults.</p>
+        <AccountSettingsPanel />
       </section>
 
       <section v-else class="dashboard-section">
