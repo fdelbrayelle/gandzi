@@ -30,6 +30,10 @@ This file stores durable product and technical decisions for contributors and co
 - Pinia for state management
 - Vue-ChartJS for charts
 - i18n: English default with extensible major-language dictionaries
+- Current UX baseline:
+  - authenticated users land on a dashboard (not the login landing)
+  - annual budget is an editable month-by-month matrix with annual/monthly/% rollups
+  - account settings screen supports persisted preferences
 
 ## Functional Decisions
 - Budget: yearly, month-by-month, by category and account, rollover enabled.
@@ -58,6 +62,13 @@ This file stores durable product and technical decisions for contributors and co
 
 ## Localization & Preferences
 - Default language: English
-- Target locales include: en, fr, es, de, it, pt, zh, ja, hi, ar, ru
+- Target locales include: en, fr, es, de, it, pt, zh, ja, hi, ar, ru, ka
 - Default timezone: Europe/Paris (configurable)
 - Supported currencies: EUR, USD, JPY, CNY, INR, GBP, CHF
+- Preferences persisted locally include:
+  - language, timezone, date format
+  - primary and secondary currencies
+  - budget alert threshold and email notification settings
+  - wealth snapshot frequency
+  - default simulation horizon
+  - default export format

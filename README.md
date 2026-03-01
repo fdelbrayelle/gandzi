@@ -1,6 +1,6 @@
-# Gandzi (განძი) 🇬🇪 - Personal Finance Treasure 🏦💎
+# Gandzi (განძი) - Personal Finance Treasure 🏦💎
 
-`Gandzi` (from Georgian `განძი`, "treasure") is a self-hosted personal finance management application focused on rigorous accounting, privacy by design, and long-term wealth intelligence.
+`Gandzi` (from Georgian 🇬🇪 `განძი`, "treasure") is a self-hosted personal finance management application focused on rigorous accounting, privacy by design, and long-term wealth intelligence.
 
 ## Vision
 
