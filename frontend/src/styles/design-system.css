@@ -90,7 +90,7 @@ body {
 }
 
 .meta-chip {
-  margin-top: 0.7rem;
+  margin-top: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -104,9 +104,11 @@ body {
 }
 
 .chip-row {
+  margin-top: 0.7rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  column-gap: 0.6rem;
+  row-gap: 0.3rem;
 }
 
 .login-panel {
