@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { apiGet, apiPut, apiPost, apiDelete } from '../composables/useApi';
 
 export type AssetEntry = {
   support: string;
@@ -53,7 +54,19 @@ export const useWealthStore = defineStore('wealth', {
     },
   },
   actions: {
-    initFromStorage() {
+    async initFromStorage() {
+      type ApiResponse = { snapshots: { date: string; assets: { support: string; value: number }[]; liabilities: number }[]; customSupports: string[] };
+      const apiData = await apiGet<ApiResponse>('/api/v1/wealth');
+      if (apiData && apiData.snapshots.length > 0) {
+        this.snapshots = apiData.snapshots.map((s) => ({
+          date: s.date,
+          assets: s.assets.map((a) => ({ support: a.support, value: a.value })),
+          liabilities: s.liabilities,
+        }));
+        this.customSupports = apiData.customSupports || [];
+        this.saveToStorage();
+        return;
+      }
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       try {
@@ -70,11 +83,26 @@ export const useWealthStore = defineStore('wealth', {
         customSupports: this.customSupports,
       }));
     },
+    async saveToApi() {
+      await apiPut('/api/v1/wealth', {
+        snapshots: this.snapshots.map((s) => ({
+          date: s.date,
+          assets: s.assets.map((a) => ({ support: a.support, value: a.value })),
+          liabilities: s.liabilities,
+        })),
+        customSupports: this.customSupports,
+      });
+    },
     addSnapshot(snapshot: WealthSnapshot): void {
       this.snapshots.push(snapshot);
       this.snapshots.sort((a, b) => a.date.localeCompare(b.date));
       this.syncCustomSupports(snapshot);
       this.saveToStorage();
+      apiPost('/api/v1/wealth/snapshots', {
+        date: snapshot.date,
+        assets: snapshot.assets.map((a) => ({ support: a.support, value: a.value })),
+        liabilities: snapshot.liabilities,
+      });
     },
     updateSnapshot(index: number, snapshot: WealthSnapshot): void {
       if (index >= 0 && index < this.snapshots.length) {
@@ -85,14 +113,17 @@ export const useWealthStore = defineStore('wealth', {
     },
     removeSnapshot(index: number): void {
       if (index >= 0 && index < this.snapshots.length) {
+        const date = this.snapshots[index].date;
         this.snapshots.splice(index, 1);
         this.saveToStorage();
+        apiDelete(`/api/v1/wealth/snapshots/${date}`);
       }
     },
     addCustomSupport(support: string): void {
       if (support && !this.allSupports.includes(support)) {
         this.customSupports.push(support);
         this.saveToStorage();
+        apiPost('/api/v1/wealth/supports', { name: support });
       }
     },
     syncCustomSupports(snapshot: WealthSnapshot): void {
@@ -114,6 +145,7 @@ export const useWealthStore = defineStore('wealth', {
       }
       this.snapshots.sort((a, b) => a.date.localeCompare(b.date));
       this.saveToStorage();
+      this.saveToApi();
     },
   },
 });

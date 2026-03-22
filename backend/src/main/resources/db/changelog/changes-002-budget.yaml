@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-budget-cell
+      author: gandzi
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE budget_cell (
+                id VARCHAR(64) PRIMARY KEY NOT NULL,
+                user_id VARCHAR(128) NOT NULL,
+                year SMALLINT NOT NULL,
+                line_id VARCHAR(128) NOT NULL,
+                monthly_values NUMERIC(12,2)[] NOT NULL,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT uq_budget_cell_user_year_line UNIQUE (user_id, year, line_id)
+              );
+              CREATE INDEX idx_budget_cell_user_year ON budget_cell (user_id, year);
+
+  - changeSet:
+      id: 002-create-budget-investment-line
+      author: gandzi
+      changes:
+        - sql:
+            sql: >
+              CREATE TABLE budget_investment_line (
+                id VARCHAR(64) PRIMARY KEY NOT NULL,
+                user_id VARCHAR(128) NOT NULL,
+                line_id VARCHAR(128) NOT NULL,
+                label_key VARCHAR(255) NOT NULL,
+                default_values NUMERIC(12,2)[] NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT uq_budget_invest_user_line UNIQUE (user_id, line_id)
+              );

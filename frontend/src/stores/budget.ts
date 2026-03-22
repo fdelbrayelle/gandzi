@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { apiGet, apiPut, apiPatch } from '../composables/useApi';
 
 export type ExpenseGroup = 'income' | 'investment' | 'house' | 'fixed' | 'variable';
 
@@ -68,7 +69,28 @@ export const useBudgetStore = defineStore('budget', {
     },
   },
   actions: {
-    initFromStorage() {
+    async initFromStorage() {
+      // Try API first, fall back to localStorage
+      type ApiResponse = { yearData: Record<string, Record<string, number[]>>; investmentLines: { id: string; labelKey: string; defaultValues: number[] }[] };
+      const apiData = await apiGet<ApiResponse>('/api/v1/budget');
+      if (apiData && Object.keys(apiData.yearData).length > 0) {
+        // Convert string keys to number keys
+        const yearData: Record<number, Record<string, number[]>> = {};
+        for (const [yearStr, lines] of Object.entries(apiData.yearData)) {
+          yearData[Number(yearStr)] = lines;
+        }
+        this.yearData = yearData;
+        this.investmentLines = (apiData.investmentLines || []).map((l) => ({
+          id: l.id,
+          labelKey: l.labelKey,
+          group: 'investment' as const,
+          defaultValues: l.defaultValues,
+          dynamic: true,
+        }));
+        this.saveToStorage();
+        return;
+      }
+      // Fall back to localStorage
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
       try {
@@ -84,6 +106,17 @@ export const useBudgetStore = defineStore('budget', {
         yearData: this.yearData,
         investmentLines: this.investmentLines,
       }));
+    },
+    async saveToApi() {
+      const investLines = this.investmentLines.map((l) => ({
+        id: l.id,
+        labelKey: l.labelKey,
+        defaultValues: l.defaultValues,
+      }));
+      await apiPut('/api/v1/budget', {
+        yearData: this.yearData,
+        investmentLines: investLines,
+      });
     },
     ensureInvestmentLine(support: string): void {
       const id = `invest_${support.toLowerCase().replace(/\s+/g, '_')}`;
@@ -116,6 +149,8 @@ export const useBudgetStore = defineStore('budget', {
     setValue(year: number, lineId: string, monthIdx: number, value: number): void {
       this.getYearData(year)[lineId][monthIdx] = value;
       this.saveToStorage();
+      // Debounced API sync
+      apiPatch('/api/v1/budget/cell', { year, lineId, monthIdx, value });
     },
     mergeImportData(data: Record<number, Record<string, number[]>>): void {
       for (const [yearStr, lineMap] of Object.entries(data)) {
@@ -133,6 +168,7 @@ export const useBudgetStore = defineStore('budget', {
         }
       }
       this.saveToStorage();
+      this.saveToApi();
     },
   },
 });

@@ -1,0 +1,106 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-wealth-snapshot
+      author: gandzi
+      changes:
+        - createTable:
+            tableName: wealth_snapshot
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: snapshot_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: liabilities
+                  type: numeric(14,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: wealth_snapshot
+            columnNames: user_id, snapshot_date
+            constraintName: uq_wealth_snapshot_user_date
+        - createIndex:
+            tableName: wealth_snapshot
+            indexName: idx_wealth_snapshot_user
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: 003-create-wealth-snapshot-asset
+      author: gandzi
+      changes:
+        - createTable:
+            tableName: wealth_snapshot_asset
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: snapshot_id
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_asset_snapshot
+                    references: wealth_snapshot(id)
+                    deleteCascade: true
+              - column:
+                  name: support
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: numeric(14,2)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 003-create-wealth-custom-support
+      author: gandzi
+      changes:
+        - createTable:
+            tableName: wealth_custom_support
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: support_name
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: wealth_custom_support
+            columnNames: user_id, support_name
+            constraintName: uq_wealth_support_user_name
