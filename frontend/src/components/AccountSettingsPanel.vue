@@ -21,7 +21,47 @@ const supportedLocales = [
   { code: 'ka', name: 'ქართული' },
 ];
 const supportedCurrencies = ['EUR', 'USD', 'JPY', 'CNY', 'INR', 'GBP', 'CHF'];
-const supportedTimezones = ['Europe/Paris', 'UTC', 'America/New_York', 'Asia/Tokyo', 'Asia/Shanghai', 'Asia/Kolkata'];
+const supportedTimezones = [
+  { zone: 'Pacific/Midway', label: '(GMT-11:00) Midway' },
+  { zone: 'Pacific/Honolulu', label: '(GMT-10:00) Honolulu' },
+  { zone: 'America/Anchorage', label: '(GMT-09:00) Anchorage' },
+  { zone: 'America/Los_Angeles', label: '(GMT-08:00) Los Angeles' },
+  { zone: 'America/Denver', label: '(GMT-07:00) Denver' },
+  { zone: 'America/Chicago', label: '(GMT-06:00) Chicago' },
+  { zone: 'America/New_York', label: '(GMT-05:00) New York' },
+  { zone: 'America/Caracas', label: '(GMT-04:00) Caracas' },
+  { zone: 'America/Sao_Paulo', label: '(GMT-03:00) São Paulo' },
+  { zone: 'America/Argentina/Buenos_Aires', label: '(GMT-03:00) Buenos Aires' },
+  { zone: 'Atlantic/South_Georgia', label: '(GMT-02:00) South Georgia' },
+  { zone: 'Atlantic/Azores', label: '(GMT-01:00) Azores' },
+  { zone: 'UTC', label: '(GMT+00:00) UTC' },
+  { zone: 'Europe/London', label: '(GMT+00:00) London' },
+  { zone: 'Europe/Paris', label: '(GMT+01:00) Paris' },
+  { zone: 'Europe/Berlin', label: '(GMT+01:00) Berlin' },
+  { zone: 'Europe/Brussels', label: '(GMT+01:00) Brussels' },
+  { zone: 'Europe/Madrid', label: '(GMT+01:00) Madrid' },
+  { zone: 'Europe/Rome', label: '(GMT+01:00) Rome' },
+  { zone: 'Europe/Zurich', label: '(GMT+01:00) Zurich' },
+  { zone: 'Africa/Cairo', label: '(GMT+02:00) Cairo' },
+  { zone: 'Europe/Athens', label: '(GMT+02:00) Athens' },
+  { zone: 'Europe/Helsinki', label: '(GMT+02:00) Helsinki' },
+  { zone: 'Europe/Istanbul', label: '(GMT+03:00) Istanbul' },
+  { zone: 'Europe/Moscow', label: '(GMT+03:00) Moscow' },
+  { zone: 'Asia/Dubai', label: '(GMT+04:00) Dubai' },
+  { zone: 'Asia/Tbilisi', label: '(GMT+04:00) Tbilisi' },
+  { zone: 'Asia/Karachi', label: '(GMT+05:00) Karachi' },
+  { zone: 'Asia/Kolkata', label: '(GMT+05:30) Kolkata' },
+  { zone: 'Asia/Dhaka', label: '(GMT+06:00) Dhaka' },
+  { zone: 'Asia/Bangkok', label: '(GMT+07:00) Bangkok' },
+  { zone: 'Asia/Singapore', label: '(GMT+08:00) Singapore' },
+  { zone: 'Asia/Shanghai', label: '(GMT+08:00) Shanghai' },
+  { zone: 'Asia/Hong_Kong', label: '(GMT+08:00) Hong Kong' },
+  { zone: 'Asia/Tokyo', label: '(GMT+09:00) Tokyo' },
+  { zone: 'Asia/Seoul', label: '(GMT+09:00) Seoul' },
+  { zone: 'Australia/Sydney', label: '(GMT+10:00) Sydney' },
+  { zone: 'Pacific/Noumea', label: '(GMT+11:00) Noumea' },
+  { zone: 'Pacific/Auckland', label: '(GMT+12:00) Auckland' },
+];
 
 const llmProviders = [
   { value: 'anthropic', label: 'Anthropic' },
@@ -132,7 +172,7 @@ onUnmounted(() => {
 
       <label class="settings-label" for="timezone">{{ localeMessages.timezoneLabel }}</label>
       <select id="timezone" v-model="form.timezone" class="settings-input settings-select">
-        <option v-for="tz in supportedTimezones" :key="tz" :value="tz">{{ tz }}</option>
+        <option v-for="tz in supportedTimezones" :key="tz.zone" :value="tz.zone">{{ tz.label }}</option>
       </select>
 
       <label class="settings-label" for="dateFormat">{{ localeMessages.dateFormatLabel }}</label>
@@ -166,10 +206,10 @@ onUnmounted(() => {
 
       <label class="settings-label" for="snapshotFrequency">{{ localeMessages.wealthSnapshotFrequencyLabel }}</label>
       <select id="snapshotFrequency" v-model="form.snapshotFrequency" class="settings-input settings-select">
-        <option value="DAILY">Daily</option>
-        <option value="MONTHLY">Monthly</option>
-        <option value="YEARLY">Yearly</option>
-        <option value="ON_DEMAND">On demand</option>
+        <option value="DAILY">{{ localeMessages.freqDaily }}</option>
+        <option value="MONTHLY">{{ localeMessages.freqMonthly }}</option>
+        <option value="YEARLY">{{ localeMessages.freqYearly }}</option>
+        <option value="ON_DEMAND">{{ localeMessages.freqOnDemand }}</option>
       </select>
 
       <label class="settings-label" for="simulationHorizonYears">{{ localeMessages.simulationHorizonLabel }}</label>

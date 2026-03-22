@@ -117,6 +117,7 @@ export const messages: Record<Locale, MessageMap> = {
     housingOwner: 'Owner',
     housingTenant: 'Tenant',
     coOwnershipShareLabel: 'Ownership share (%)',
+    freqDaily: 'Daily', freqMonthly: 'Monthly', freqYearly: 'Yearly', freqOnDemand: 'On demand',
   },
   fr: {
     appTitle: 'Gandzi - Trésor financier',
@@ -232,6 +233,7 @@ export const messages: Record<Locale, MessageMap> = {
     housingOwner: 'Propriétaire',
     housingTenant: 'Locataire',
     coOwnershipShareLabel: 'Part de propriété (%)',
+    freqDaily: 'Quotidienne', freqMonthly: 'Mensuelle', freqYearly: 'Annuelle', freqOnDemand: 'À la demande',
   },
   es: {
     appTitle: 'Gandzi - Tesoro financiero',
@@ -336,6 +338,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'Cambiar a vista anual', wealthSwitchToMonth: 'Cambiar a vista mensual',
     housingStatusLabel: 'Situación de vivienda', housingOwner: 'Propietario', housingTenant: 'Inquilino',
     coOwnershipShareLabel: 'Parte de propiedad (%)',
+    freqDaily: 'Diaria', freqMonthly: 'Mensual', freqYearly: 'Anual', freqOnDemand: 'Bajo demanda',
   },
   de: {
     appTitle: 'Gandzi - Finanzschatz',
@@ -440,6 +443,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'Zur Jahresansicht', wealthSwitchToMonth: 'Zur Monatsansicht',
     housingStatusLabel: 'Wohnsituation', housingOwner: 'Eigentümer', housingTenant: 'Mieter',
     coOwnershipShareLabel: 'Eigentumsanteil (%)',
+    freqDaily: 'Täglich', freqMonthly: 'Monatlich', freqYearly: 'Jährlich', freqOnDemand: 'Bei Bedarf',
   },
   it: {
     appTitle: 'Gandzi - Tesoro finanziario',
@@ -544,6 +548,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'Vista annuale', wealthSwitchToMonth: 'Vista mensile',
     housingStatusLabel: 'Situazione abitativa', housingOwner: 'Proprietario', housingTenant: 'Inquilino',
     coOwnershipShareLabel: 'Quota di proprietà (%)',
+    freqDaily: 'Giornaliera', freqMonthly: 'Mensile', freqYearly: 'Annuale', freqOnDemand: 'Su richiesta',
   },
   pt: {
     appTitle: 'Gandzi - Tesouro financeiro',
@@ -648,6 +653,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'Vista anual', wealthSwitchToMonth: 'Vista mensal',
     housingStatusLabel: 'Situação habitacional', housingOwner: 'Proprietário', housingTenant: 'Inquilino',
     coOwnershipShareLabel: 'Parte de propriedade (%)',
+    freqDaily: 'Diária', freqMonthly: 'Mensal', freqYearly: 'Anual', freqOnDemand: 'Sob demanda',
   },
   zh: {
     appTitle: 'Gandzi - 金融宝藏',
@@ -752,6 +758,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: '切换到年视图', wealthSwitchToMonth: '切换到月视图',
     housingStatusLabel: '住房状况', housingOwner: '业主', housingTenant: '租客',
     coOwnershipShareLabel: '产权份额 (%)',
+    freqDaily: '每日', freqMonthly: '每月', freqYearly: '每年', freqOnDemand: '按需',
   },
   ja: {
     appTitle: 'Gandzi - ファイナンシャルトレジャー',
@@ -856,6 +863,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: '年表示に切替', wealthSwitchToMonth: '月表示に切替',
     housingStatusLabel: '住居状況', housingOwner: '所有者', housingTenant: '賃借人',
     coOwnershipShareLabel: '所有権割合 (%)',
+    freqDaily: '毎日', freqMonthly: '毎月', freqYearly: '毎年', freqOnDemand: 'オンデマンド',
   },
   hi: {
     appTitle: 'Gandzi - वित्तीय खजाना',
@@ -960,6 +968,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'वार्षिक दृश्य', wealthSwitchToMonth: 'मासिक दृश्य',
     housingStatusLabel: 'आवास स्थिति', housingOwner: 'मालिक', housingTenant: 'किरायेदार',
     coOwnershipShareLabel: 'स्वामित्व हिस्सा (%)',
+    freqDaily: 'दैनिक', freqMonthly: 'मासिक', freqYearly: 'वार्षिक', freqOnDemand: 'मांग पर',
   },
   ar: {
     appTitle: 'Gandzi - كنز مالي',
@@ -1064,6 +1073,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'عرض سنوي', wealthSwitchToMonth: 'عرض شهري',
     housingStatusLabel: 'حالة السكن', housingOwner: 'مالك', housingTenant: 'مستأجر',
     coOwnershipShareLabel: 'حصة الملكية (%)',
+    freqDaily: 'يومي', freqMonthly: 'شهري', freqYearly: 'سنوي', freqOnDemand: 'عند الطلب',
   },
   ru: {
     appTitle: 'Gandzi - Финансовое сокровище',
@@ -1168,6 +1178,7 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'Годовой вид', wealthSwitchToMonth: 'Месячный вид',
     housingStatusLabel: 'Жилищный статус', housingOwner: 'Собственник', housingTenant: 'Арендатор',
     coOwnershipShareLabel: 'Доля собственности (%)',
+    freqDaily: 'Ежедневно', freqMonthly: 'Ежемесячно', freqYearly: 'Ежегодно', freqOnDemand: 'По запросу',
   },
   ka: {
     appTitle: 'Gandzi - ფინანსური განძი',
@@ -1272,5 +1283,6 @@ export const messages: Record<Locale, MessageMap> = {
     wealthSwitchToYear: 'წლიური ხედი', wealthSwitchToMonth: 'თვიური ხედი',
     housingStatusLabel: 'საცხოვრებელი სტატუსი', housingOwner: 'მესაკუთრე', housingTenant: 'მოიჯარე',
     coOwnershipShareLabel: 'საკუთრების წილი (%)',
+    freqDaily: 'ყოველდღიური', freqMonthly: 'ყოველთვიური', freqYearly: 'ყოველწლიური', freqOnDemand: 'მოთხოვნით',
   },
 };
