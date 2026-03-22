@@ -118,6 +118,8 @@ Rules:
 - For wealth: detect asset holdings like PEA, CTO, Livret A, Crypto, Gold, Real Estate, etc.
 - Sheet names like "Patrimoine", "Wealth", "Assets", "Portfolio", "Vermögen", "Patrimonio" etc. indicate wealth data.
 - Wealth data may also appear as rows with dates and asset values in any sheet.
+- IMPORTANT: For wealth snapshots, prioritize the latest year sheet (e.g. the most recent year like 2026) or any sheet containing "Patrimoin" in its name. Extract the most accurate and recent asset valuations available.
+- If asset values appear at the end of a budget year sheet (e.g. portfolio totals, account balances), extract them as a wealth snapshot dated to the last day of that year/month.
 
 Respond with ONLY valid JSON, no markdown. Use compact format:
 {

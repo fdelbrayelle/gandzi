@@ -52,6 +52,8 @@ type BudgetState = {
   investmentLines: LineDef[];
 };
 
+const STORAGE_KEY = 'gandzi_budget_v1';
+
 export const useBudgetStore = defineStore('budget', {
   state: (): BudgetState => ({
     yearData: {},
@@ -66,6 +68,23 @@ export const useBudgetStore = defineStore('budget', {
     },
   },
   actions: {
+    initFromStorage() {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw) as Partial<BudgetState>;
+        if (parsed.yearData) this.yearData = parsed.yearData;
+        if (parsed.investmentLines) this.investmentLines = parsed.investmentLines;
+      } catch {
+        window.localStorage.removeItem(STORAGE_KEY);
+      }
+    },
+    saveToStorage() {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        yearData: this.yearData,
+        investmentLines: this.investmentLines,
+      }));
+    },
     ensureInvestmentLine(support: string): void {
       const id = `invest_${support.toLowerCase().replace(/\s+/g, '_')}`;
       if (!this.investmentLines.some((l) => l.id === id)) {
@@ -96,6 +115,7 @@ export const useBudgetStore = defineStore('budget', {
     },
     setValue(year: number, lineId: string, monthIdx: number, value: number): void {
       this.getYearData(year)[lineId][monthIdx] = value;
+      this.saveToStorage();
     },
     mergeImportData(data: Record<number, Record<string, number[]>>): void {
       for (const [yearStr, lineMap] of Object.entries(data)) {
@@ -112,6 +132,7 @@ export const useBudgetStore = defineStore('budget', {
           }
         }
       }
+      this.saveToStorage();
     },
   },
 });

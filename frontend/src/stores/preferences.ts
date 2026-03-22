@@ -23,6 +23,8 @@ type PreferencesState = {
   llmProvider: LlmProvider;
   llmModel: string;
   llmApiKey: string;
+  housingStatus: 'owner' | 'tenant';
+  coOwnershipShare: number; // 0-100, percentage owned (e.g. 50 for shared with partner)
 };
 
 const STORAGE_KEY = 'gandzi_preferences_v1';
@@ -45,6 +47,8 @@ export const usePreferencesStore = defineStore('preferences', {
     llmProvider: 'anthropic',
     llmModel: 'claude-sonnet-4-6',
     llmApiKey: '',
+    housingStatus: 'owner',
+    coOwnershipShare: 100,
   }),
   actions: {
     initFromStorage() {
@@ -125,6 +129,14 @@ export const usePreferencesStore = defineStore('preferences', {
     },
     setLlmApiKey(llmApiKey: string) {
       this.llmApiKey = llmApiKey;
+      this.saveToStorage();
+    },
+    setHousingStatus(housingStatus: 'owner' | 'tenant') {
+      this.housingStatus = housingStatus;
+      this.saveToStorage();
+    },
+    setCoOwnershipShare(coOwnershipShare: number) {
+      this.coOwnershipShare = Math.min(100, Math.max(0, coOwnershipShare));
       this.saveToStorage();
     },
   },

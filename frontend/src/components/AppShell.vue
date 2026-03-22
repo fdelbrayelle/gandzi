@@ -9,11 +9,15 @@ import AccountSettingsPanel from './AccountSettingsPanel.vue';
 import ImportExportPanel from './ImportExportPanel.vue';
 import WealthPanel from './WealthPanel.vue';
 import { useImportStore } from '../stores/import';
+import { useBudgetStore } from '../stores/budget';
+import { useWealthStore } from '../stores/wealth';
 
 const pinia = createPinia();
 setActivePinia(pinia);
 const store = usePreferencesStore(pinia);
 const importStore = useImportStore(pinia);
+const budgetStore = useBudgetStore(pinia);
+const wealthStore = useWealthStore(pinia);
 const localeMessages = computed(() => messages[store.locale]);
 const defaultLoginUrl =
   'http://localhost:8081/realms/gandzi/protocol/openid-connect/auth?client_id=gandzi-frontend&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A4321%2F';
@@ -42,6 +46,8 @@ watch(currentSection, (section) => {
 
 onMounted(() => {
   store.initFromStorage();
+  budgetStore.initFromStorage();
+  wealthStore.initFromStorage();
   const savedSection = window.localStorage.getItem(sectionStorageKey);
   if (savedSection && sections.value.some((section) => section.id === savedSection)) {
     currentSection.value = savedSection as DashboardSection;

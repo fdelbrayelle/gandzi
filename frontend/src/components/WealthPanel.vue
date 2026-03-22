@@ -87,9 +87,10 @@ const latestSnap = computed(() => {
   return wealthStore.snapshots[wealthStore.snapshots.length - 1];
 });
 
-const latestFinancial = computed(() => latestSnap.value ? financialWealth(latestSnap.value) : 0);
-const latestGross = computed(() => latestSnap.value ? grossWealth(latestSnap.value) : 0);
-const latestNet = computed(() => latestSnap.value ? netWealth(latestSnap.value) : 0);
+const coShare = computed(() => prefStore.coOwnershipShare);
+const latestFinancial = computed(() => latestSnap.value ? financialWealth(latestSnap.value, coShare.value) : 0);
+const latestGross = computed(() => latestSnap.value ? grossWealth(latestSnap.value, coShare.value) : 0);
+const latestNet = computed(() => latestSnap.value ? netWealth(latestSnap.value, coShare.value) : 0);
 
 const supportSummary = computed(() => {
   if (!latestSnap.value) return [];
@@ -175,7 +176,7 @@ const wealthEvolutionData = computed(() => ({
   datasets: [
     {
       label: t.value.wealthFinancial,
-      data: wealthStore.snapshots.map(financialWealth),
+      data: wealthStore.snapshots.map((s) => financialWealth(s, coShare.value)),
       borderColor: '#7cf7ff',
       backgroundColor: 'rgba(124, 247, 255, 0.08)',
       fill: true,
@@ -183,7 +184,7 @@ const wealthEvolutionData = computed(() => ({
     },
     {
       label: t.value.wealthGross,
-      data: wealthStore.snapshots.map(grossWealth),
+      data: wealthStore.snapshots.map((s) => grossWealth(s, coShare.value)),
       borderColor: '#8c7bff',
       backgroundColor: 'rgba(140, 123, 255, 0.08)',
       fill: true,
@@ -191,7 +192,7 @@ const wealthEvolutionData = computed(() => ({
     },
     {
       label: t.value.wealthNet,
-      data: wealthStore.snapshots.map(netWealth),
+      data: wealthStore.snapshots.map((s) => netWealth(s, coShare.value)),
       borderColor: '#5af2b8',
       backgroundColor: 'rgba(90, 242, 184, 0.08)',
       fill: true,
@@ -333,13 +334,13 @@ function assetValue(snap: WealthSnapshot, support: string): number {
             <button class="period-nav-btn" type="button" @click="prevPeriod">&larr;</button>
             <span class="period-nav-label" :class="{ 'current-period': isCurrentPeriod }">{{ periodLabel }}</span>
             <button class="period-nav-btn" type="button" @click="nextPeriod">&rarr;</button>
-            <button class="period-zoom-btn" type="button" @click="toggleViewMode">
+            <button class="period-zoom-btn" type="button" @click="toggleViewMode" :title="viewMode === 'month' ? t.wealthSwitchToYear : t.wealthSwitchToMonth">
               {{ viewMode === 'month' ? '&#128197;' : '&#128198;' }}
             </button>
           </div>
         </div>
-        <div v-if="periodSnapshot" class="pie-container">
-          <Doughnut :data="pieChartData" :options="pieChartOptions" />
+        <div v-if="periodSnapshot && pieChartData.labels.length > 0" class="pie-container">
+          <Doughnut :key="`pie-${selectedYear}-${selectedMonth}-${viewMode}`" :data="pieChartData" :options="pieChartOptions" />
         </div>
         <p v-else class="no-data-msg">{{ t.wealthNoData }}</p>
       </div>
@@ -410,9 +411,9 @@ function assetValue(snap: WealthSnapshot, support: string): number {
                 {{ fmt(assetValue(snap, support)) }}
               </td>
               <td class="negative">{{ fmt(snap.liabilities) }}</td>
-              <td class="positive">{{ fmt(financialWealth(snap)) }}</td>
-              <td class="positive">{{ fmt(grossWealth(snap)) }}</td>
-              <td :class="netWealth(snap) >= 0 ? 'positive' : 'negative'">{{ fmt(netWealth(snap)) }}</td>
+              <td class="positive">{{ fmt(financialWealth(snap, coShare)) }}</td>
+              <td class="positive">{{ fmt(grossWealth(snap, coShare)) }}</td>
+              <td :class="netWealth(snap, coShare) >= 0 ? 'positive' : 'negative'">{{ fmt(netWealth(snap, coShare)) }}</td>
               <td class="action-cell">
                 <button class="action-btn delete" type="button" @click="removeSnapshot(idx)">&#128465;</button>
               </td>
@@ -569,8 +570,11 @@ function assetValue(snap: WealthSnapshot, support: string): number {
   font-size: 0.9rem;
   font-weight: 600;
   color: #e8efff;
-  min-width: 5rem;
+  width: 10rem;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .period-nav-label.current-period {

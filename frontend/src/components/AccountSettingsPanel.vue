@@ -52,6 +52,8 @@ const form = ref({
   llmProvider: store.llmProvider,
   llmModel: store.llmModel,
   llmApiKey: store.llmApiKey,
+  housingStatus: store.housingStatus,
+  coOwnershipShare: store.coOwnershipShare,
 });
 
 const availableModels = computed(() => llmModelsByProvider[form.value.llmProvider] || []);
@@ -90,6 +92,8 @@ function save(): void {
   store.setLlmProvider(form.value.llmProvider);
   store.setLlmModel(form.value.llmModel);
   store.setLlmApiKey(form.value.llmApiKey);
+  store.setHousingStatus(form.value.housingStatus);
+  store.setCoOwnershipShare(Number(form.value.coOwnershipShare) || 100);
   notifySaved();
 }
 
@@ -137,6 +141,17 @@ onUnmounted(() => {
         <option value="MM/DD/YYYY">MM/DD/YYYY</option>
         <option value="YYYY-MM-DD">YYYY-MM-DD</option>
       </select>
+
+      <label class="settings-label" for="housingStatus">{{ localeMessages.housingStatusLabel }}</label>
+      <select id="housingStatus" v-model="form.housingStatus" class="settings-input settings-select">
+        <option value="owner">{{ localeMessages.housingOwner }}</option>
+        <option value="tenant">{{ localeMessages.housingTenant }}</option>
+      </select>
+
+      <template v-if="form.housingStatus === 'owner'">
+        <label class="settings-label" for="coOwnershipShare">{{ localeMessages.coOwnershipShareLabel }}</label>
+        <input id="coOwnershipShare" v-model.number="form.coOwnershipShare" class="settings-input" type="number" min="0" max="100" step="1" />
+      </template>
     </section>
 
     <section class="settings-card">
