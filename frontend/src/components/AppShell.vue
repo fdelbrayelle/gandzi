@@ -7,10 +7,13 @@ import GandziLogo from './branding/GandziLogo.vue';
 import AnnualBudgetMatrix from './AnnualBudgetMatrix.vue';
 import AccountSettingsPanel from './AccountSettingsPanel.vue';
 import ImportExportPanel from './ImportExportPanel.vue';
+import WealthPanel from './WealthPanel.vue';
+import { useImportStore } from '../stores/import';
 
 const pinia = createPinia();
 setActivePinia(pinia);
 const store = usePreferencesStore(pinia);
+const importStore = useImportStore(pinia);
 const localeMessages = computed(() => messages[store.locale]);
 const defaultLoginUrl =
   'http://localhost:8081/realms/gandzi/protocol/openid-connect/auth?client_id=gandzi-frontend&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A4321%2F';
@@ -29,8 +32,8 @@ const sections = computed((): { id: DashboardSection; label: string }[] => [
   { id: 'budget', label: `📅 ${localeMessages.value.menuBudget}` },
   { id: 'wealth', label: `💼 ${localeMessages.value.menuWealth}` },
   { id: 'simulations', label: `🧮 ${localeMessages.value.menuSimulations}` },
-  { id: 'account', label: `⚙️ ${localeMessages.value.menuAccount}` },
   { id: 'import-export', label: `💾 ${localeMessages.value.menuImportExport}` },
+  { id: 'account', label: `⚙️ ${localeMessages.value.menuAccount}` },
 ]);
 
 watch(currentSection, (section) => {
@@ -65,6 +68,11 @@ function logout() {
 
 function setCurrentSection(section: DashboardSection) {
   currentSection.value = section;
+}
+
+function goToImportReport() {
+  currentSection.value = 'import-export';
+  importStore.status = 'ready'; // ensure preview is shown
 }
 </script>
 
@@ -134,6 +142,12 @@ function setCurrentSection(section: DashboardSection) {
         <AnnualBudgetMatrix />
       </section>
 
+      <section v-else-if="currentSection === 'wealth'" class="dashboard-section">
+        <h2 class="section-title">{{ localeMessages.wealthTitle }}</h2>
+        <p class="section-subtitle">{{ localeMessages.wealthSubtitle }}</p>
+        <WealthPanel />
+      </section>
+
       <section v-else-if="currentSection === 'account'" class="dashboard-section">
         <h2 class="section-title">{{ localeMessages.accountSettingsTitle }}</h2>
         <p class="section-subtitle">{{ localeMessages.accountSettingsSubtitle }}</p>
@@ -151,5 +165,27 @@ function setCurrentSection(section: DashboardSection) {
         <p class="section-subtitle">{{ localeMessages.placeholderSectionSubtitle }}</p>
       </section>
     </main>
+
+    <!-- Global import toast -->
+    <Transition name="toast">
+      <div v-if="importStore.status === 'parsing'" class="import-toast import-toast-parsing">
+        <div class="toast-spinner" />
+        <span>{{ localeMessages.importParsing }}</span>
+        <span class="toast-file">{{ importStore.fileName }}</span>
+      </div>
+      <div v-else-if="importStore.status === 'ready' && currentSection !== 'import-export'" class="import-toast import-toast-ready" key="ready">
+        <span>{{ localeMessages.importReady }}</span>
+        <button class="toast-link" type="button" @click="goToImportReport">{{ localeMessages.importViewReport }}</button>
+        <button class="toast-dismiss" type="button" @click="importStore.dismiss()">&#10005;</button>
+      </div>
+      <div v-else-if="importStore.status === 'success' && currentSection !== 'import-export'" class="import-toast import-toast-success" key="success">
+        <span>{{ localeMessages.importSuccess }}</span>
+        <button class="toast-dismiss" type="button" @click="importStore.dismiss()">&#10005;</button>
+      </div>
+      <div v-else-if="importStore.status === 'error' && currentSection !== 'import-export'" class="import-toast import-toast-error" key="error">
+        <span>{{ importStore.errorMessage }}</span>
+        <button class="toast-dismiss" type="button" @click="importStore.dismiss()">&#10005;</button>
+      </div>
+    </Transition>
   </div>
 </template>

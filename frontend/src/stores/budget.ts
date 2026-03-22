@@ -1,46 +1,98 @@
 import { defineStore } from 'pinia';
 
-type RowKind = 'income' | 'expense';
+export type ExpenseGroup = 'income' | 'investment' | 'house' | 'fixed' | 'variable';
 
 export type LineDef = {
   id: string;
   labelKey: string;
-  kind: RowKind;
+  group: ExpenseGroup;
   defaultValues: number[];
+  dynamic?: boolean;
+};
+
+export const GROUP_ORDER: ExpenseGroup[] = ['income', 'investment', 'house', 'fixed', 'variable'];
+
+export const GROUP_LABEL_KEYS: Record<ExpenseGroup, string> = {
+  income: 'groupIncome',
+  investment: 'groupInvestment',
+  house: 'groupHouse',
+  fixed: 'groupFixed',
+  variable: 'groupVariable',
 };
 
 export const LINE_DEFS: LineDef[] = [
-  { id: 'income', labelKey: 'budgetIncome', kind: 'income', defaultValues: [4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400] },
-  { id: 'mortgage', labelKey: 'budgetMortgage', kind: 'expense', defaultValues: [1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400] },
-  { id: 'groceries', labelKey: 'budgetGroceries', kind: 'expense', defaultValues: [500, 485, 470, 490, 510, 500, 520, 505, 495, 500, 515, 510] },
-  { id: 'transport', labelKey: 'budgetTransport', kind: 'expense', defaultValues: [90, 80, 75, 88, 95, 92, 96, 94, 87, 90, 91, 93] },
-  { id: 'utilities', labelKey: 'budgetUtilities', kind: 'expense', defaultValues: [194, 194, 194, 194, 194, 194, 194, 194, 194, 194, 194, 194] },
-  { id: 'water', labelKey: 'budgetWater', kind: 'expense', defaultValues: [35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35] },
-  { id: 'insurance', labelKey: 'budgetInsurance', kind: 'expense', defaultValues: [174, 174, 174, 174, 174, 174, 174, 174, 174, 174, 174, 174] },
-  { id: 'subscriptions', labelKey: 'budgetSubscriptions', kind: 'expense', defaultValues: [130, 130, 130, 130, 130, 130, 130, 130, 130, 130, 130, 130] },
-  { id: 'vacation', labelKey: 'budgetVacation', kind: 'expense', defaultValues: [0, 0, 0, 300, 0, 0, 1100, 0, 0, 0, 0, 300] },
+  // Income
+  { id: 'income', labelKey: 'budgetIncome', group: 'income', defaultValues: [4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400, 4400] },
+  // House
+  { id: 'mortgage', labelKey: 'budgetMortgage', group: 'house', defaultValues: [1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400, 1400] },
+  { id: 'rent', labelKey: 'budgetRent', group: 'house', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'utilities', labelKey: 'budgetUtilities', group: 'house', defaultValues: [194, 194, 194, 194, 194, 194, 194, 194, 194, 194, 194, 194] },
+  { id: 'water', labelKey: 'budgetWater', group: 'house', defaultValues: [35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35] },
+  // Fixed expenses
+  { id: 'insurance', labelKey: 'budgetInsurance', group: 'fixed', defaultValues: [174, 174, 174, 174, 174, 174, 174, 174, 174, 174, 174, 174] },
+  { id: 'subscriptions', labelKey: 'budgetSubscriptions', group: 'fixed', defaultValues: [130, 130, 130, 130, 130, 130, 130, 130, 130, 130, 130, 130] },
+  // Variable expenses
+  { id: 'groceries', labelKey: 'budgetGroceries', group: 'variable', defaultValues: [500, 485, 470, 490, 510, 500, 520, 505, 495, 500, 515, 510] },
+  { id: 'transport', labelKey: 'budgetTransport', group: 'variable', defaultValues: [90, 80, 75, 88, 95, 92, 96, 94, 87, 90, 91, 93] },
+  { id: 'vacation', labelKey: 'budgetVacation', group: 'variable', defaultValues: [0, 0, 0, 300, 0, 0, 1100, 0, 0, 0, 0, 300] },
+  { id: 'gifts', labelKey: 'budgetGifts', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'leisure', labelKey: 'budgetLeisure', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'personal_care', labelKey: 'budgetPersonalCare', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'health', labelKey: 'budgetHealth', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'taxes', labelKey: 'budgetTaxes', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'property_tax', labelKey: 'budgetPropertyTax', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'bank_fees', labelKey: 'budgetBankFees', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+  { id: 'misc', labelKey: 'budgetMisc', group: 'variable', defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
 ];
 
 export const BUDGET_LINE_IDS = LINE_DEFS.map((d) => d.id);
 
 type BudgetState = {
   yearData: Record<number, Record<string, number[]>>;
+  investmentLines: LineDef[];
 };
 
 export const useBudgetStore = defineStore('budget', {
   state: (): BudgetState => ({
     yearData: {},
+    investmentLines: [],
   }),
+  getters: {
+    allLineDefs(state): LineDef[] {
+      return [...LINE_DEFS, ...state.investmentLines];
+    },
+    allLineIds(state): string[] {
+      return [...BUDGET_LINE_IDS, ...state.investmentLines.map((l) => l.id)];
+    },
+  },
   actions: {
+    ensureInvestmentLine(support: string): void {
+      const id = `invest_${support.toLowerCase().replace(/\s+/g, '_')}`;
+      if (!this.investmentLines.some((l) => l.id === id)) {
+        this.investmentLines.push({
+          id,
+          labelKey: `__invest__${support}`,
+          group: 'investment',
+          defaultValues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          dynamic: true,
+        });
+      }
+    },
     getYearData(year: number): Record<string, number[]> {
       if (!this.yearData[year]) {
         const data: Record<string, number[]> = {};
-        for (const def of LINE_DEFS) {
+        for (const def of this.allLineDefs) {
           data[def.id] = [...def.defaultValues];
         }
         this.yearData[year] = data;
       }
-      return this.yearData[year];
+      const data = this.yearData[year];
+      for (const def of this.investmentLines) {
+        if (!data[def.id]) {
+          data[def.id] = [...def.defaultValues];
+        }
+      }
+      return data;
     },
     setValue(year: number, lineId: string, monthIdx: number, value: number): void {
       this.getYearData(year)[lineId][monthIdx] = value;
@@ -50,6 +102,11 @@ export const useBudgetStore = defineStore('budget', {
         const year = Number(yearStr);
         const target = this.getYearData(year);
         for (const [lineId, values] of Object.entries(lineMap)) {
+          if (lineId.startsWith('invest_') && !this.allLineIds.includes(lineId)) {
+            const support = lineId.replace('invest_', '').replace(/_/g, ' ');
+            this.ensureInvestmentLine(support);
+            if (!target[lineId]) target[lineId] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          }
           if (target[lineId] && Array.isArray(values) && values.length === 12) {
             target[lineId] = values.map((v) => Math.abs(Number(v) || 0));
           }
