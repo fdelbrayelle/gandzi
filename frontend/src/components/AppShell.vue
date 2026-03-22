@@ -11,6 +11,7 @@ import WealthPanel from './WealthPanel.vue';
 import { useImportStore } from '../stores/import';
 import { useBudgetStore } from '../stores/budget';
 import { useWealthStore } from '../stores/wealth';
+import { exchangeCode, isAuthenticated as checkAuth, clearTokens, getLogoutUrl, startTokenRefreshLoop, stopTokenRefreshLoop } from '../composables/useAuth';
 
 const pinia = createPinia();
 setActivePinia(pinia);
@@ -44,32 +45,55 @@ watch(currentSection, (section) => {
   window.localStorage.setItem(sectionStorageKey, section);
 });
 
-onMounted(() => {
+onMounted(async () => {
   store.initFromStorage();
-  budgetStore.initFromStorage();
-  wealthStore.initFromStorage();
   const savedSection = window.localStorage.getItem(sectionStorageKey);
   if (savedSection && sections.value.some((section) => section.id === savedSection)) {
     currentSection.value = savedSection as DashboardSection;
   }
+
   const params = new URLSearchParams(window.location.search);
-  if (params.has('code') || params.has('session_state')) {
-    isAuthenticated.value = true;
-    window.localStorage.setItem(authStorageKey, 'true');
+  const code = params.get('code');
+
+  if (code) {
+    // Exchange authorization code for tokens
+    const success = await exchangeCode(code);
     window.history.replaceState({}, document.title, window.location.pathname);
-    authResolved.value = true;
-    return;
+    if (success) {
+      isAuthenticated.value = true;
+      window.localStorage.setItem(authStorageKey, 'true');
+      startTokenRefreshLoop();
+      // Load data from API now that we have a token
+      await Promise.all([budgetStore.initFromStorage(), wealthStore.initFromStorage()]);
+      authResolved.value = true;
+      return;
+    }
   }
 
-  isAuthenticated.value = window.localStorage.getItem(authStorageKey) === 'true';
+  // Check if we have a valid token from a previous session
+  if (checkAuth()) {
+    isAuthenticated.value = true;
+    window.localStorage.setItem(authStorageKey, 'true');
+    startTokenRefreshLoop();
+    await Promise.all([budgetStore.initFromStorage(), wealthStore.initFromStorage()]);
+  } else if (window.localStorage.getItem(authStorageKey) === 'true') {
+    // Had auth but token expired and refresh failed — load from localStorage
+    isAuthenticated.value = true;
+    budgetStore.initFromStorage();
+    wealthStore.initFromStorage();
+  }
+
   authResolved.value = true;
 });
 
 function logout() {
+  stopTokenRefreshLoop();
+  clearTokens();
   window.localStorage.removeItem(authStorageKey);
   isAuthenticated.value = false;
   currentSection.value = 'budget';
-  window.history.replaceState({}, document.title, window.location.pathname);
+  // Redirect to Keycloak logout to clear the SSO session
+  window.location.href = getLogoutUrl();
 }
 
 function setCurrentSection(section: DashboardSection) {

@@ -1,23 +1,9 @@
+import { ensureValidToken } from './useAuth';
+
 const API_BASE = (import.meta.env.PUBLIC_API_URL as string | undefined) ?? 'http://localhost:8080';
 
-function getAuthToken(): string | null {
-  // Try to get the access token from Keycloak session storage
-  // Keycloak JS adapter stores tokens in sessionStorage/localStorage
-  for (const key of Object.keys(window.sessionStorage)) {
-    if (key.includes('kc-') || key.includes('keycloak')) {
-      try {
-        const val = JSON.parse(window.sessionStorage.getItem(key) || '{}');
-        if (val.access_token) return val.access_token;
-      } catch { /* ignore */ }
-    }
-  }
-  // Fallback: check localStorage for token stored during OAuth redirect
-  const token = window.localStorage.getItem('gandzi_access_token');
-  return token;
-}
-
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T | null> {
-  const token = getAuthToken();
+  const token = await ensureValidToken();
   if (!token) return null;
 
   try {
@@ -29,6 +15,12 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
         ...(options.headers || {}),
       },
     });
+
+    if (response.status === 401) {
+      // Token expired mid-request, don't retry — next call will refresh
+      console.warn(`API 401 on ${path} — token may have expired`);
+      return null;
+    }
 
     if (!response.ok) {
       console.warn(`API ${response.status} on ${path}`);
