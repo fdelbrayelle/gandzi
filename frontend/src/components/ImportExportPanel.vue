@@ -78,7 +78,13 @@ async function readFileContent(file: File): Promise<string> {
   return sheets.join('\n\n');
 }
 
+const MAX_CONTENT_CHARS = 80000; // ~20k tokens, leaves room for output
+
 function buildLlmPrompt(fileContent: string, fileName: string): string {
+  // Truncate if too large to avoid blowing the context window
+  const content = fileContent.length > MAX_CONTENT_CHARS
+    ? fileContent.slice(0, MAX_CONTENT_CHARS) + '\n\n[... file truncated for size ...]'
+    : fileContent;
   return `You are a financial data parser. Given the following spreadsheet/CSV content from file "${fileName}", extract TWO types of data:
 
 1) BUDGET DATA — map rows to these budget line IDs: ${BUDGET_LINE_IDS.join(', ')}
@@ -126,7 +132,7 @@ Respond with ONLY valid JSON, no markdown. Use compact format:
 If no wealth data found, set "wealth" to []. If no budget data found, set "budget" to [].
 
 File content:
-${fileContent}`;
+${content}`;
 }
 
 type LlmResult = { budget: ParsedYear[]; wealth: ParsedWealth[] };
@@ -148,7 +154,7 @@ async function callLlm(fileContent: string, fileName: string): Promise<LlmResult
     };
     body = JSON.stringify({
       model: store.llmModel,
-      max_tokens: 16384,
+      max_tokens: 32768,
       messages: [{ role: 'user', content: prompt }],
     });
   } else if (store.llmProvider === 'openai') {
@@ -160,7 +166,7 @@ async function callLlm(fileContent: string, fileName: string): Promise<LlmResult
     body = JSON.stringify({
       model: store.llmModel,
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 16384,
+      max_tokens: 32768,
     });
   } else {
     url = `https://generativelanguage.googleapis.com/v1beta/models/${store.llmModel}:generateContent?key=${store.llmApiKey}`;
@@ -196,13 +202,29 @@ async function callLlm(fileContent: string, fileName: string): Promise<LlmResult
     throw new Error('AI response was truncated — the file may be too large. Try importing fewer sheets or a smaller file.');
   }
 
+  // Strip markdown code fences
   text = text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
 
+  // Extract JSON: find the first { or [ and the last } or ]
   let raw: unknown;
   try {
     raw = JSON.parse(text);
   } catch {
-    throw new Error('AI returned invalid JSON. Please try again or use a smaller file.');
+    // Try to extract JSON from surrounding text
+    const jsonStart = text.search(/[\[{]/);
+    const jsonEndBrace = text.lastIndexOf('}');
+    const jsonEndBracket = text.lastIndexOf(']');
+    const jsonEnd = Math.max(jsonEndBrace, jsonEndBracket);
+    if (jsonStart >= 0 && jsonEnd > jsonStart) {
+      const extracted = text.slice(jsonStart, jsonEnd + 1);
+      try {
+        raw = JSON.parse(extracted);
+      } catch {
+        throw new Error(`AI returned invalid JSON. First 200 chars: ${text.slice(0, 200)}`);
+      }
+    } else {
+      throw new Error(`AI returned invalid JSON. First 200 chars: ${text.slice(0, 200)}`);
+    }
   }
 
   // Handle both old array format and new object format
@@ -220,7 +242,10 @@ async function callLlm(fileContent: string, fileName: string): Promise<LlmResult
   for (const yearEntry of budget) {
     if (typeof yearEntry.year !== 'number') throw new Error('Invalid year in response');
     for (const line of yearEntry.lines) {
-      if (!Array.isArray(line.values) || line.values.length !== 12) throw new Error(`Line ${line.id} must have 12 values`);
+      if (!Array.isArray(line.values)) throw new Error(`Line ${line.id} must have values array`);
+      // Pad with 0s if fewer than 12 months, trim if more
+      while (line.values.length < 12) line.values.push(0);
+      if (line.values.length > 12) line.values = line.values.slice(0, 12);
     }
   }
 
