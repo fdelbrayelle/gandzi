@@ -26,7 +26,8 @@ Build a trustworthy financial cockpit that lets users:
 ## Product Scope (V1)
 
 ### 1) Budget tracking 📅
-- Annual budgets split by month.
+- Annual budgets split by month with year navigation (previous/next year).
+- Per-year independent data storage via Pinia budget store.
 - Budget dimensions: by category and by account.
 - Rollover support month to month.
 - Civil year as default period.
@@ -80,6 +81,7 @@ Build a trustworthy financial cockpit that lets users:
 
 ### 8) Full data import/export 💾
 - JSON and CSV export/import.
+- AI-powered import from CSV, Excel (.xlsx/.xls), and ODS files: an LLM parses the file content and maps rows to budget lines automatically, with multi-year and multi-sheet support.
 - Import mode: merge or full replace.
 - No encryption in V1.
 - Export filenames include precise timestamp.
@@ -101,7 +103,7 @@ Build a trustworthy financial cockpit that lets users:
 - Vue 3
 - Pinia
 - Vue-ChartJS
-- i18n strategy: lightweight dictionary-based translation layer, English default, easy extension to major world languages.
+- i18n strategy: lightweight dictionary-based translation layer, English default, with full translations across 12 locales (en, fr, es, de, it, pt, zh, ja, hi, ar, ru, ka). Language selector shows native language names.
 
 ### Data & Infra
 - PostgreSQL
@@ -113,6 +115,14 @@ Build a trustworthy financial cockpit that lets users:
 - Default UI language: English.
 - Frontend ships with a simple extensible locale registry (`en`, `fr`, `es`, `de`, `it`, `pt`, `zh`, `ja`, `hi`, `ar`, `ru`, `ka`).
 - Locale can be user-configured and persisted.
+- All budget matrix labels (months, headers, row labels) are fully translated.
+
+## AI Integration 🤖
+
+- Configurable LLM provider in Account Settings: Anthropic, OpenAI, or Google.
+- Model selection per provider (Claude Opus/Sonnet 4.6, GPT 5.3/5.4, Gemini 3/3.1).
+- API key stored in browser localStorage (backend proxy planned).
+- Used for AI-powered budget import: parses uploaded spreadsheets and maps data to budget lines.
 
 ## Currencies & Timezone
 

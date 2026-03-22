@@ -4,9 +4,11 @@ import type { Locale } from '../i18n/messages';
 type SnapshotFrequency = 'DAILY' | 'MONTHLY' | 'YEARLY' | 'ON_DEMAND';
 type DateFormat = 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
 type ExportFormat = 'JSON' | 'CSV';
+type LlmProvider = 'anthropic' | 'openai' | 'google';
 
 type PreferencesState = {
   displayName: string;
+  birthDate: string;
   locale: Locale;
   timezone: string;
   currency: string;
@@ -18,6 +20,9 @@ type PreferencesState = {
   simulationHorizonYears: number;
   dateFormat: DateFormat;
   exportFormat: ExportFormat;
+  llmProvider: LlmProvider;
+  llmModel: string;
+  llmApiKey: string;
 };
 
 const STORAGE_KEY = 'gandzi_preferences_v1';
@@ -25,6 +30,7 @@ const STORAGE_KEY = 'gandzi_preferences_v1';
 export const usePreferencesStore = defineStore('preferences', {
   state: (): PreferencesState => ({
     displayName: 'Gandzi User',
+    birthDate: '',
     locale: 'en' as Locale,
     timezone: 'Europe/Paris',
     currency: 'EUR',
@@ -36,6 +42,9 @@ export const usePreferencesStore = defineStore('preferences', {
     simulationHorizonYears: 30,
     dateFormat: 'DD/MM/YYYY',
     exportFormat: 'JSON',
+    llmProvider: 'anthropic',
+    llmModel: 'claude-sonnet-4-6',
+    llmApiKey: '',
   }),
   actions: {
     initFromStorage() {
@@ -56,6 +65,10 @@ export const usePreferencesStore = defineStore('preferences', {
     },
     setDisplayName(displayName: string) {
       this.displayName = displayName;
+      this.saveToStorage();
+    },
+    setBirthDate(birthDate: string) {
+      this.birthDate = birthDate;
       this.saveToStorage();
     },
     setLocale(locale: Locale) {
@@ -100,6 +113,18 @@ export const usePreferencesStore = defineStore('preferences', {
     },
     setExportFormat(exportFormat: ExportFormat) {
       this.exportFormat = exportFormat;
+      this.saveToStorage();
+    },
+    setLlmProvider(llmProvider: LlmProvider) {
+      this.llmProvider = llmProvider;
+      this.saveToStorage();
+    },
+    setLlmModel(llmModel: string) {
+      this.llmModel = llmModel;
+      this.saveToStorage();
+    },
+    setLlmApiKey(llmApiKey: string) {
+      this.llmApiKey = llmApiKey;
       this.saveToStorage();
     },
   },

@@ -6,6 +6,7 @@ import { messages } from '../i18n/messages';
 import GandziLogo from './branding/GandziLogo.vue';
 import AnnualBudgetMatrix from './AnnualBudgetMatrix.vue';
 import AccountSettingsPanel from './AccountSettingsPanel.vue';
+import ImportExportPanel from './ImportExportPanel.vue';
 
 const pinia = createPinia();
 setActivePinia(pinia);
@@ -137,6 +138,12 @@ function setCurrentSection(section: DashboardSection) {
         <h2 class="section-title">{{ localeMessages.accountSettingsTitle }}</h2>
         <p class="section-subtitle">{{ localeMessages.accountSettingsSubtitle }}</p>
         <AccountSettingsPanel />
+      </section>
+
+      <section v-else-if="currentSection === 'import-export'" class="dashboard-section">
+        <h2 class="section-title">{{ localeMessages.importExportTitle }}</h2>
+        <p class="section-subtitle">{{ localeMessages.importExportSubtitle }}</p>
+        <ImportExportPanel />
       </section>
 
       <section v-else class="dashboard-section">
