@@ -13,12 +13,14 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - '8081:8080'
+    volumes:
+      - ./infra/keycloak/gandzi-realm.json:/opt/keycloak/data/import/gandzi-realm.json:ro
 
   backend:
     build:
